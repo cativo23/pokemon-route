@@ -342,6 +342,43 @@ h2 {
 }
 .aside b { color: var(--color-muted); }
 
+/* --- la tabla de tipos, creciendo ---
+   Siempre dieciocho ranuras. Las vacias son tipos que el juego todavia no
+   inventa, asi que la misma tira aparece tres veces y el lector la ve
+   completarse: el crecimiento ES el diagrama. Solo cambia dos veces en toda
+   la ruta (15 a 17 en Johto, 17 a 18 en Kalos); Kanto es la linea base. */
+.tc { margin-top: var(--space-md); }
+
+.tc-top {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2xs) var(--space-md);
+  align-items: baseline;
+  font-family: var(--font-display);
+  font-size: var(--text-pixel-xs);
+  line-height: 2.2;
+  color: var(--color-neutral);
+}
+.tc-top b { color: var(--color-accent); font-weight: 400; }
+
+.tc-strip {
+  margin-top: var(--space-sm);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+}
+.tc-strip i {
+  width: 13px;
+  height: 13px;
+  background: var(--color-rule);
+}
+.tc-strip i.new { background: var(--color-accent); }
+/* Una ranura que el juego todavia no llena: contorno, no relleno. */
+.tc-strip i.empty { background: none; box-shadow: inset 0 0 0 1px var(--color-rule); }
+
+.tc-note { margin-top: var(--space-sm); font-size: var(--text-sm); color: var(--color-neutral); }
+.tc-note b { color: var(--color-ink); font-weight: 700; }
+
 /* --- el marcador de completado --- */
 .mark {
   margin-top: var(--space-lg);
