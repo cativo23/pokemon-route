@@ -183,6 +183,56 @@ check("the advertised total matches the sum of the stops",
           total_in_screen.group(1) if total_in_screen else "?", sum(hours)))
 check("no stop ships pre-marked", 'class="stage done"' not in html)
 
+# --------------------------------------------------------------- sharing card
+
+print("\nSharing card")
+ORIGIN = "https://pokemon.cativo.dev"
+
+
+def meta(attr, name):
+    m = re.search(r'<meta %s="%s" content="([^"]*)"' % (attr, re.escape(name)), html)
+    return m.group(1) if m else None
+
+
+def png_size(path):
+    """Ancho y alto desde la cabecera IHDR. Sin dependencias, como todo aqui."""
+    with open(path, "rb") as fh:
+        head = fh.read(24)
+    if head[:8] != b"\x89PNG\r\n\x1a\n":
+        return None
+    return (int.from_bytes(head[16:20], "big"), int.from_bytes(head[20:24], "big"))
+
+
+check("the page declares an icon", 'rel="icon"' in html)
+
+og_img = meta("property", "og:image")
+tw_img = meta("name", "twitter:image")
+check("a sharing image is declared for both cards", bool(og_img) and og_img == tw_img,
+      "og:image=%s twitter:image=%s" % (og_img, tw_img))
+
+# Las redes exigen URL absoluta, asi que hay que volver a local para comprobarla.
+local = os.path.join(ROOT, og_img[len(ORIGIN):].lstrip("/")) if og_img and og_img.startswith(ORIGIN) else None
+check("the sharing image is absolute and points into this site", bool(local),
+      "must start with %s" % ORIGIN)
+check("the sharing image file exists", bool(local) and os.path.exists(local),
+      "missing: %s" % (local or "?"))
+
+# Si alguien re-renderiza la tarjeta con otro tamano y olvida las metas, las
+# redes recortan mal y nadie se entera. Que lo diga CI.
+size = png_size(local) if local and os.path.exists(local) else None
+declared = (meta("property", "og:image:width"), meta("property", "og:image:height"))
+check("the declared image size matches the file",
+      bool(size) and declared == (str(size[0]), str(size[1])),
+      "file is %s, page says %s" % (size, declared))
+check("the sharing image keeps the 1.91:1 ratio the networks crop to",
+      bool(size) and abs(size[0] / size[1] - 1.91) < 0.03,
+      "%s is %.2f:1" % (size, size[0] / size[1]) if size else "no image")
+
+canon = re.search(r'<link rel="canonical" href="([^"]*)"', html)
+check("canonical and og:url agree",
+      bool(canon) and canon.group(1) == meta("property", "og:url"),
+      "canonical=%s og:url=%s" % (canon.group(1) if canon else None, meta("property", "og:url")))
+
 # --------------------------------------------------------------- report
 
 print("\n%d checks, %d failed" % (checks + 1, len(failures)))

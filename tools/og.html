@@ -1,0 +1,79 @@
+<!doctype html>
+<!-- Fuente de assets/og.png, la tarjeta que sale al compartir el enlace.
+     Se renderiza con tools/make-og.sh. Usa los mismos tokens y fuentes que
+     el sitio, asi que un cambio de paleta se propaga solo. -->
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Pixelify+Sans:wght@400;700&display=swap">
+<link rel="stylesheet" href="../assets/tokens.css">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1200px; height: 630px; overflow: hidden; }
+  body {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    display: flex; flex-direction: column; justify-content: space-between;
+    padding: 62px 68px 56px;
+  }
+  .eyebrow {
+    font-family: var(--font-display); font-size: 16px; line-height: 1;
+    color: var(--color-accent); letter-spacing: 0.04em;
+  }
+  h1 {
+    margin-top: 28px;
+    font-family: var(--font-display); font-weight: 400;
+    font-size: 52px; line-height: 1.4; color: var(--color-ink);
+  }
+  .sub { margin-top: 24px; font-size: 26px; line-height: 1.5; color: var(--color-muted); max-width: 34ch; }
+  .sub b { color: var(--color-ink); font-weight: 700; }
+
+  /* La fila de sprites es la tesis hecha imagen: el arte cambia de 1998 a 2025.
+     Doce a 56px con 12 de hueco caben en los 1064 de ancho util; a mas, se sale. */
+  .row { display: flex; gap: 12px; align-items: flex-end; }
+  .pk { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .pk img { width: 56px; height: 56px; image-rendering: pixelated; }
+  .pk span { display: block; width: 56px; height: 5px; background: var(--era); }
+
+  /* La firma va en su propio renglon: junto a los sprites no cabe. */
+  .foot {
+    margin-top: 30px; padding-top: 22px;
+    border-top: 1px solid var(--color-rule);
+    display: flex; justify-content: space-between; align-items: baseline;
+  }
+  .url { font-family: var(--font-display); font-size: 20px; line-height: 1; color: var(--color-accent); }
+  .who { font-family: var(--font-display); font-size: 14px; line-height: 1; color: var(--color-neutral); }
+</style>
+</head>
+<body>
+  <div>
+    <div class="eyebrow">GEN 1 &mdash; GEN 9 &middot; 12 GAMES &middot; ~405 HOURS</div>
+    <h1>From Kanto<br>to Paldea</h1>
+    <p class="sub">The whole Pok&eacute;mon series, <b>one story per region</b> &mdash; no version played twice, no remake of a region already visited.</p>
+  </div>
+
+  <div>
+    <div class="row">
+      <div class="pk" style="--era: var(--era-gb)"><img src="../assets/sprites/01-pikachu.png" alt=""><span></span></div>
+      <div class="pk" style="--era: var(--era-gbc)"><img src="../assets/sprites/02-suicune.png" alt=""><span></span></div>
+      <div class="pk" style="--era: var(--era-gba)"><img src="../assets/sprites/03-rayquaza.png" alt=""><span></span></div>
+      <div class="pk" style="--era: var(--era-ds)"><img src="../assets/sprites/04-giratina.png" alt=""><span></span></div>
+      <div class="pk" style="--era: var(--era-ds)"><img src="../assets/sprites/05-reshiram.png" alt=""><span></span></div>
+      <div class="pk" style="--era: var(--era-ds)"><img src="../assets/sprites/06-kyurem.png" alt=""><span></span></div>
+      <div class="pk" style="--era: var(--era-3ds)"><img src="../assets/sprites/07-xerneas.png" alt=""><span></span></div>
+      <div class="pk" style="--era: var(--era-3ds)"><img src="../assets/sprites/08-solgaleo.png" alt=""><span></span></div>
+      <div class="pk" style="--era: var(--era-switch)"><img src="../assets/sprites/09-zacian.png" alt=""><span></span></div>
+      <div class="pk" style="--era: var(--era-switch)"><img src="../assets/sprites/10-arceus.png" alt=""><span></span></div>
+      <div class="pk" style="--era: var(--era-switch)"><img src="../assets/sprites/11-koraidon.png" alt=""><span></span></div>
+      <div class="pk" style="--era: var(--era-switch)"><img src="../assets/sprites/12-lucario.png" alt=""><span></span></div>
+    </div>
+    <div class="foot">
+      <div class="url">pokemon.cativo.dev</div>
+      <div class="who">@CATIVO23</div>
+    </div>
+  </div>
+</body>
+</html>

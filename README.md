@@ -73,7 +73,7 @@ Hand-written HTML, CSS and JavaScript. No framework, no build step, no dependenc
 
 | | |
 |---|---|
-| Total weight | ~172 KB, sprites included |
+| Total weight | ~196 KB, sprites and sharing card included |
 | JavaScript | ~8 KB, vanilla |
 | Build step | none — `index.html` *is* the artifact |
 | Runtime requests | fonts only; the page works offline after first load |
@@ -87,6 +87,9 @@ assets/tokens.css       colour, type, spacing and motion tokens
 assets/styles.css       everything else
 assets/app.js           progress, the scroll rail, keyboard navigation
 assets/sprites/         12 era-accurate sprites + the hero Pikachu
+assets/og.png           the card shown when the link is shared
+assets/icon.png         favicon — the same Pikachu, on a DMG screen
+tools/og.html           source of that card; render with tools/make-og.sh
 tools/validate.py       the checks CI runs
 deploy/                 nginx + compose, behind Traefik
 docs/                   images for this README
@@ -113,6 +116,8 @@ python3 tools/validate.py
 ```
 
 It verifies that the HTML parses and every element closes, that every image has alt text and explicit dimensions, that every local file referenced exists and no sprite is orphaned, that **no literal colour or font escapes the token system**, that no token exists only in the dark palette, that the anti-pattern list stays empty (`transition: all`, `100vw`, italic headings, browser-default easing), that reduced motion and visible focus are honoured, and that **the advertised hour total matches the sum of the stops** — a check that caught a stale number the first time it ran.
+
+It also guards the sharing card: that the image exists, that **the size declared in the page matches the actual PNG** (read from the IHDR header, no dependencies), and that it keeps the 1.91:1 ratio the networks crop to. Re-render the card at a different size and forget to update the tags, and CI stops you rather than the link quietly looking broken.
 
 ## Contributing
 

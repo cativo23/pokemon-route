@@ -19,7 +19,7 @@ These are not negotiable, because they are the point of the project:
 - **No dependencies. No build step. No framework.** `index.html` is the deployable artifact. If a change needs npm, it is the wrong change.
 - **No tracking, no analytics, no third-party embeds.** The page must work offline after first load.
 - **Colours and fonts come from tokens.** Nothing literal in `styles.css` — add a token in `tokens.css` and reference it. The validator enforces this.
-- **Stay inside the weight budget.** ~172 KB today, 400 KB hard ceiling in CI.
+- **Stay inside the weight budget.** ~196 KB today, 400 KB hard ceiling in CI.
 - **Accessibility is not optional.** Real alt text, visible focus, reduced motion honoured, keyboard operable.
 - **No invented data.** No made-up statistics, no fabricated difficulty scores, no filler numbers. Hour counts are estimates and are labelled as such.
 - **No plot spoilers.** The page is written for someone who has not played these games. Premise and structure are fair game — what a game is about, how it is shaped, what unlocks when. Plot beats, endings, twists and character fates are not. "This game's ending is its best moment" is fine; naming what happens in it is not. This rule has been broken once already: a factual correction about the Alola versions was written with the ending spelled out, and had to be rewritten.
@@ -27,7 +27,7 @@ These are not negotiable, because they are the point of the project:
 ## Before you open a PR
 
 ```bash
-python3 tools/validate.py     # 26 checks, all must pass
+python3 tools/validate.py     # 33 checks, all must pass
 node --check assets/app.js
 python3 -m http.server 8000   # then look at it, including at 320px wide
 ```
