@@ -157,19 +157,48 @@ a { color: var(--color-accent); }
   margin-top: var(--space-sm);
 }
 
-/* --- barra de progreso en 12 celdas discretas, no una barra continua --- */
+/* --- el medidor: 12 celdas AGRUPADAS POR CONSOLA ---
+   Doce celdas para que cada parada siga siendo legible una por una, agrupadas
+   en las seis eras de hardware para que el mismo control cuente además la
+   historia del hardware. Un control con dos lecturas, en vez de dos controles
+   mostrando lo mismo. Cada celda lleva el color de su era. */
 .cells {
-  display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  gap: 2px;
+  display: flex;
+  align-items: flex-end;
+  gap: 7px;
   margin-top: var(--space-md);
+}
+.cell-group {
+  display: flex;
+  gap: 2px;
+  flex: 1 1 0;
+  min-width: 0;
+  position: relative;
+  padding-bottom: 13px;
+}
+.cell-group::after {
+  content: attr(data-console);
+  position: absolute;
+  left: 0; bottom: 0;
+  font-family: var(--font-display);
+  font-size: 5.5px;
+  letter-spacing: .04em;
+  color: var(--color-neutral);
+  white-space: nowrap;
 }
 .cell {
   height: 12px;
+  flex: 1 1 0;
+  min-width: 0;
   background: var(--color-paper-3);
   border: var(--rule-hair) solid var(--color-rule);
 }
-.cell.on { background: var(--color-accent); border-color: var(--color-accent); }
+.cell.on { background: var(--era, var(--color-accent)); border-color: var(--era, var(--color-accent)); }
+/* "Jugando ahora": media celda, no una llena. */
+.cell.half {
+  background: linear-gradient(to right, var(--era, var(--color-accent)) 50%, transparent 50%);
+  border-color: var(--era, var(--color-accent));
+}
 
 .cells-lbl {
   margin-top: var(--space-xs);
@@ -662,3 +691,92 @@ details.gen > summary:focus-visible { outline: var(--rule-thick) solid var(--col
 }
 .gen-list .pick b { color: var(--color-ink); }
 .gen-list .pick .tick { background: var(--color-accent); border-color: var(--color-accent); }
+
+/* ════════════ 17 · el contador de horas ════════════ */
+
+.cells-hours { margin-top: var(--space-2xs); color: var(--color-accent); }
+
+/* ════════════ 18 · el estado "jugando ahora" ════════════
+   Vas a pasar meses en una sola parada. Sin este estado el medidor solo sabe
+   decir "empezado" o "no", que es justo lo que menos ocurre. */
+
+.stage.playing .stage-n { color: var(--color-warn); }
+.stage.playing .dot { background: var(--color-warn); }
+.stage.playing .sprite { border-color: var(--color-warn); }
+.stage.playing .mark { color: var(--color-warn); border-color: var(--color-warn); }
+.stage.playing .mark .box {
+  background: linear-gradient(to right, var(--color-warn) 50%, transparent 50%);
+}
+
+/* ════════════ 19 · atajos de teclado ════════════ */
+
+.pill-keys { color: var(--color-neutral); white-space: nowrap; }
+
+.help {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  padding: var(--space-lg);
+  background: oklch(0% 0 0 / 0.55);
+}
+.help[hidden] { display: none; }
+
+.help-in {
+  width: min(30rem, 100%);
+  max-height: 100%;
+  overflow-y: auto;
+  padding: var(--space-xl);
+  background: var(--color-paper);
+  border: var(--rule-thick) solid var(--color-accent);
+}
+.help-h {
+  font-family: var(--font-display);
+  font-size: var(--text-pixel-sm);
+  line-height: 1.9;
+  color: var(--color-accent);
+  margin-bottom: var(--space-lg);
+}
+.help-list {
+  margin: 0;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--space-sm) var(--space-lg);
+  align-items: baseline;
+  font-size: var(--text-sm);
+}
+.help-list dt {
+  font-family: var(--font-display);
+  font-size: var(--text-pixel-xs);
+  line-height: 1.8;
+  color: var(--color-ink);
+  border: var(--rule-hair) solid var(--color-rule);
+  padding: 5px 8px;
+  text-align: center;
+}
+.help-list dd { margin: 0; color: var(--color-muted); }
+.help-note {
+  margin-top: var(--space-lg);
+  font-size: var(--text-sm);
+  color: var(--color-neutral);
+}
+.help-close {
+  margin-top: var(--space-lg);
+  font-family: var(--font-display);
+  font-size: var(--text-pixel-xs);
+  line-height: 1;
+  color: var(--color-ink);
+  background: none;
+  border: var(--rule-thick) solid var(--color-rule);
+  padding: var(--space-sm) var(--space-md);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.help-close:hover { color: var(--color-accent); border-color: var(--color-accent); }
+.help-close:active { transform: translateY(1px); }
+
+@media (max-width: 30rem) {
+  .pill-keys { display: none; }
+  .cell-group::after { font-size: 5px; }
+}

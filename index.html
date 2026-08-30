@@ -32,12 +32,13 @@
           <div class="screen-rows">
             <div>STOPS <b>12</b></div>
             <div>REGIONS <b>9</b></div>
-            <div>HOURS <b>~365</b></div>
+            <div>HOURS <b id="screen-hours">~405</b></div>
           </div>
           <p class="press">&gt; START</p>
         </div>
         <div class="cells" id="cells" aria-hidden="true"></div>
         <p class="cells-lbl" id="cells-lbl">0 / 12 CLEARED</p>
+        <p class="cells-lbl cells-hours" id="hours-lbl">~0 OF ~405 HOURS</p>
       </div>
     </div>
 
@@ -420,7 +421,24 @@
   <span class="pill-count" id="pill-count">0 / 12</span>
   <span class="pill-sep" aria-hidden="true"></span>
   <button class="pill-jump" type="button" id="jump">NEXT &gt;</button>
+  <span class="pill-sep" aria-hidden="true"></span>
+  <span class="pill-keys">? KEYS</span>
 </nav>
+
+<div class="help" id="help" hidden role="dialog" aria-modal="false" aria-label="Keyboard shortcuts">
+  <div class="help-in">
+    <p class="help-h">KEYBOARD</p>
+    <dl class="help-list">
+      <dt>J</dt><dd>next stop</dd>
+      <dt>K</dt><dd>previous stop</dd>
+      <dt>N</dt><dd>jump to the first unfinished stop</dd>
+      <dt>X</dt><dd>cycle the nearest stop: not started &rarr; playing &rarr; cleared</dd>
+      <dt>?</dt><dd>show or hide this panel</dd>
+    </dl>
+    <p class="help-note">The arrow keys are left alone on purpose &mdash; they still scroll the page normally.</p>
+    <button class="help-close" type="button">CLOSE</button>
+  </div>
+</div>
 
 <script src="assets/app.js"></script>
 </body>

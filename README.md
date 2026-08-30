@@ -27,6 +27,12 @@ Hand-written HTML, CSS and JavaScript. No framework, no build step, no dependenc
 
 The design is built from the Game Boy's own hardware: the accent is `#9BBC0F`, the real phosphor green of the DMG screen, and the four-tone palette on the hero screen is the only four tones that display could show. Each route marker grows brighter with the hardware generation, and **every sprite is drawn in the graphical style of its own game** — so the art visibly evolves from 1998 to 2025 as you scroll.
 
+Each stop has three states — **not started → playing → cleared** — because on a route this long you spend months sitting on one game, and a checkbox cannot say that. Clearing a stop adds its hour estimate to a running total read straight off the page, so the numbers can never drift from the content.
+
+The progress meter is twelve cells grouped into the six hardware eras, so one control reads two ways: how far along you are, and which console you are on.
+
+`J` and `K` walk the route, `N` jumps to the first unfinished stop, `X` cycles the nearest one, and `?` lists the lot. The arrow keys are deliberately untouched so normal scrolling still works.
+
 Progress is stored in `localStorage`; nothing leaves the browser.
 
 ```
