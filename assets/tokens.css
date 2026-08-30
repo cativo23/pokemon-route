@@ -1,0 +1,140 @@
+/* Hallmark · pre-emit critique: P5 H5 E5 S5 R4 V5
+ * Hallmark · genre: playful (retro-hardware register) · macrostructure: Narrative Workflow
+ * theme: custom · vibe: "cartucho Game Boy, fósforo, nocturno"
+ * paper oklch(14% 0.012 122) · accent oklch(80% 0.175 122) · anchor hue 122 (fósforo DMG)
+ * fonts: Press Start 2P (display) + Pixelify Sans (body)
+ * axes: paper-band=dark · display-style=pixel-bitmap · accent-hue=chromatic-green
+ * nav: N5 floating pill · footer: Ft5 statement · enrichment: Tier A CSS-art
+ */
+
+:root {
+  /* ---- superficie · claro ---- */
+  --color-paper:    oklch(96% 0.012 122);
+  --color-paper-2:  oklch(93% 0.016 122);
+  --color-paper-3:  oklch(89% 0.020 122);
+  --color-rule:     oklch(80% 0.014 122);
+  --color-neutral:  oklch(52% 0.012 122);
+  --color-muted:    oklch(40% 0.012 122);
+  --color-ink:      oklch(18% 0.014 122);
+
+  /* ---- acento único: el fósforo de la pantalla DMG ---- */
+  --color-accent:   oklch(48% 0.150 122);
+  --color-accent-2: oklch(58% 0.120 122);
+  --color-focus:    oklch(48% 0.150 122);
+
+  /* ---- semánticos (separados del acento) ---- */
+  --color-done:     oklch(46% 0.130 150);
+  --color-warn:     oklch(50% 0.130  70);
+  --color-warn-bg:  oklch(93% 0.040  70);
+
+  /* ---- la pantalla del Game Boy: sus cuatro tonos reales ---- */
+  --dmg-0: oklch(76% 0.170 122);   /* #9BBC0F */
+  --dmg-1: oklch(68% 0.150 122);   /* #8BAC0F */
+  --dmg-2: oklch(45% 0.100 130);   /* #306230 */
+  --dmg-3: oklch(28% 0.070 130);   /* #0F380F */
+  --dmg-shell: oklch(30% 0.010 122);
+
+  /* ---- eras de hardware: la luminosidad sube con la generación ---- */
+  --era-gb:     oklch(42% 0.090 122);
+  --era-gbc:    oklch(52% 0.110 122);
+  --era-gba:    oklch(60% 0.130 122);
+  --era-ds:     oklch(68% 0.150 122);
+  --era-3ds:    oklch(74% 0.165 122);
+  --era-switch: oklch(80% 0.175 122);
+
+  /* ---- tipografía ---- */
+  --font-display: "Press Start 2P", ui-monospace, "Courier New", monospace;
+  --font-body: "Pixelify Sans", ui-sans-serif, system-ui, sans-serif;
+
+  --text-display: clamp(1.35rem, 5.2vw, 3.1rem);
+  --text-4xl: clamp(1.05rem, 3.4vw, 1.7rem);
+  --text-3xl: clamp(0.92rem, 2.6vw, 1.15rem);
+  --text-2xl: 1.45rem;
+  --text-xl:  1.22rem;
+  --text-md:  1.08rem;
+  --text-sm:  0.96rem;
+  --text-xs:  0.78rem;
+  --text-pixel-sm: 0.66rem;
+  --text-pixel-xs: 0.55rem;
+
+  /* ---- espacio · escala de 4pt ---- */
+  --space-2xs: 0.25rem;
+  --space-xs:  0.5rem;
+  --space-sm:  0.75rem;
+  --space-md:  1rem;
+  --space-lg:  1.5rem;
+  --space-xl:  2rem;
+  --space-2xl: 3rem;
+  --space-3xl: 4.5rem;
+  --space-4xl: 7rem;
+
+  /* ---- líneas y radios: el píxel no tiene esquinas redondas ---- */
+  --rule-hair: 1px;
+  --rule-thick: 3px;
+  --radius-none: 0;
+  --radius-px: 2px;
+
+  /* ---- movimiento ---- */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in: cubic-bezier(0.7, 0, 0.84, 0);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-micro: 120ms;
+  --dur-short: 220ms;
+  --dur-long: 420ms;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --color-paper:    oklch(14% 0.012 122);
+    --color-paper-2:  oklch(18% 0.014 122);
+    --color-paper-3:  oklch(22% 0.016 122);
+    --color-rule:     oklch(32% 0.014 122);
+    --color-neutral:  oklch(58% 0.012 122);
+    --color-muted:    oklch(74% 0.010 122);
+    --color-ink:      oklch(94% 0.010 122);
+
+    --color-accent:   oklch(80% 0.175 122);
+    --color-accent-2: oklch(68% 0.150 122);
+    --color-focus:    oklch(80% 0.175 122);
+
+    --color-done:     oklch(78% 0.150 150);
+    --color-warn:     oklch(80% 0.130  75);
+    --color-warn-bg:  oklch(24% 0.040  75);
+
+    --dmg-shell:      oklch(24% 0.008 122);
+
+    --era-gb:     oklch(40% 0.090 122);
+    --era-gbc:    oklch(50% 0.110 122);
+    --era-gba:    oklch(60% 0.130 122);
+    --era-ds:     oklch(68% 0.150 122);
+    --era-3ds:    oklch(75% 0.165 122);
+    --era-switch: oklch(84% 0.175 122);
+  }
+}
+
+:root[data-theme="dark"] {
+  --color-paper:    oklch(14% 0.012 122);
+  --color-paper-2:  oklch(18% 0.014 122);
+  --color-paper-3:  oklch(22% 0.016 122);
+  --color-rule:     oklch(32% 0.014 122);
+  --color-neutral:  oklch(58% 0.012 122);
+  --color-muted:    oklch(74% 0.010 122);
+  --color-ink:      oklch(94% 0.010 122);
+
+  --color-accent:   oklch(80% 0.175 122);
+  --color-accent-2: oklch(68% 0.150 122);
+  --color-focus:    oklch(80% 0.175 122);
+
+  --color-done:     oklch(78% 0.150 150);
+  --color-warn:     oklch(80% 0.130  75);
+  --color-warn-bg:  oklch(24% 0.040  75);
+
+  --dmg-shell:      oklch(24% 0.008 122);
+
+  --era-gb:     oklch(40% 0.090 122);
+  --era-gbc:    oklch(50% 0.110 122);
+  --era-gba:    oklch(60% 0.130 122);
+  --era-ds:     oklch(68% 0.150 122);
+  --era-3ds:    oklch(75% 0.165 122);
+  --era-switch: oklch(84% 0.175 122);
+}

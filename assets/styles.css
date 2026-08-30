@@ -1,0 +1,658 @@
+/* Hallmark · macrostructure: Narrative Workflow · tone: oldschool · anchor hue: 122
+ * Página de ruta. Los tokens viven en tokens.css; acá no hay un solo color literal.
+ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+  overflow-x: clip;              /* clip, no hidden: hidden rompe position:sticky */
+  margin: 0;
+}
+
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+body {
+  padding-bottom: 6rem;          /* colchon para la pildora fija del pie */
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  font-size: var(--text-md);
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-style: normal;            /* los títulos son romanos, nunca itálicos */
+  line-height: 1.35;
+  margin: 0;
+  overflow-wrap: anywhere;
+  min-width: 0;
+  text-wrap: balance;
+}
+
+p { margin: 0; }
+a { color: var(--color-accent); }
+
+:focus-visible {
+  outline: var(--rule-thick) solid var(--color-focus);
+  outline-offset: 3px;
+  /* nunca animado: el anillo aparece al instante */
+}
+
+.wrap {
+  width: 100%;
+  max-width: 62rem;
+  margin-inline: auto;
+  padding-inline: var(--space-lg);
+}
+
+.measure { max-width: 60ch; }
+
+/* ════════════ 1 · héroe — la pantalla construida en CSS ════════════ */
+
+.hero {
+  padding-block: var(--space-3xl) var(--space-2xl);
+  border-bottom: var(--rule-thick) solid var(--color-rule);
+}
+
+.hero-in {
+  display: grid;
+  gap: var(--space-2xl);
+  grid-template-columns: minmax(0, 1fr);
+  align-items: center;
+}
+@media (min-width: 62rem) {
+  .hero-in { grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr); }
+}
+
+.hero h1 {
+  font-size: var(--text-display);
+  letter-spacing: -0.01em;
+  line-height: 1.5;
+}
+
+.hero .thesis {
+  margin-top: var(--space-lg);
+  font-size: var(--text-xl);
+  color: var(--color-muted);
+  max-width: 34ch;
+}
+
+/* --- la carcasa DMG, dibujada con CSS puro --- */
+.dmg {
+  background: var(--dmg-shell);
+  border: var(--rule-thick) solid var(--color-rule);
+  border-radius: var(--radius-px);
+  padding: var(--space-lg) var(--space-lg) var(--space-xl);
+  box-shadow: inset 0 -3px 0 0 var(--color-paper-3);
+}
+
+.dmg-brow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-sm);
+  font-family: var(--font-display);
+  font-size: var(--text-pixel-xs);
+  color: var(--dmg-1);
+  margin-bottom: var(--space-sm);
+}
+
+.led {
+  width: 8px; height: 8px;
+  background: var(--dmg-0);
+  flex: none;
+}
+
+.screen {
+  position: relative;
+  background: var(--dmg-0);
+  padding: var(--space-lg) var(--space-md);
+  min-height: 11rem;
+  display: grid;
+  align-content: center;
+  gap: var(--space-sm);
+  overflow: hidden;
+}
+
+/* Las líneas de barrido de un LCD, no una textura decorativa. */
+.screen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    oklch(0% 0 0 / 0.10) 0 1px,
+    oklch(0% 0 0 / 0) 1px 3px
+  );
+}
+
+.screen p, .screen div { position: relative; z-index: 1; }
+
+.screen-title {
+  font-family: var(--font-display);
+  font-size: var(--text-pixel-sm);
+  color: var(--dmg-3);
+  line-height: 1.9;
+}
+
+.screen-rows {
+  font-family: var(--font-display);
+  font-size: var(--text-pixel-xs);
+  color: var(--dmg-2);
+  line-height: 2.4;
+  display: grid;
+  gap: var(--space-2xs);
+}
+.screen-rows b { color: var(--dmg-3); font-weight: 400; }
+
+.press {
+  font-family: var(--font-display);
+  font-size: var(--text-pixel-xs);
+  color: var(--dmg-3);
+  margin-top: var(--space-sm);
+}
+
+/* --- barra de progreso en 12 celdas discretas, no una barra continua --- */
+.cells {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 2px;
+  margin-top: var(--space-md);
+}
+.cell {
+  height: 12px;
+  background: var(--color-paper-3);
+  border: var(--rule-hair) solid var(--color-rule);
+}
+.cell.on { background: var(--color-accent); border-color: var(--color-accent); }
+
+.cells-lbl {
+  margin-top: var(--space-xs);
+  font-family: var(--font-display);
+  font-size: var(--text-pixel-xs);
+  color: var(--color-neutral);
+  line-height: 2;
+}
+
+/* ════════════ 2 · nav N5 — píldora flotante con el progreso ════════════ */
+
+.pill {
+  position: fixed;
+  left: 50%;
+  bottom: var(--space-lg);
+  transform: translateX(-50%);
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-xs) var(--space-md);
+  background: var(--color-paper-2);
+  border: var(--rule-thick) solid var(--color-rule);
+  font-family: var(--font-display);
+  font-size: var(--text-pixel-xs);
+  line-height: 2.2;
+  max-width: calc(100% - var(--space-xl));
+}
+.pill-count { color: var(--color-accent); white-space: nowrap; }
+.pill-sep { width: var(--rule-hair); height: 1.1rem; background: var(--color-rule); flex: none; }
+
+.pill-jump {
+  font: inherit;
+  color: var(--color-ink);
+  background: none;
+  border: 0;
+  padding: var(--space-2xs) var(--space-xs);
+  cursor: pointer;
+  white-space: nowrap;           /* nunca dos líneas en algo clicable */
+}
+.pill-jump:hover { color: var(--color-accent); }
+.pill-jump:active { transform: translateY(1px); }
+.pill-jump[disabled] { color: var(--color-neutral); cursor: not-allowed; }
+
+/* ════════════ 3 · secciones ════════════ */
+
+.band { padding-block: var(--space-3xl); }
+.band + .band { border-top: var(--rule-hair) solid var(--color-rule); }
+.band-tight { padding-block: var(--space-2xl); }
+.band-wide { padding-block: var(--space-4xl) var(--space-3xl); }
+
+h2 {
+  font-size: var(--text-4xl);
+  line-height: 1.5;
+  color: var(--color-ink);
+}
+
+.band > .wrap > p + p,
+.band > .wrap > h2 + p { margin-top: var(--space-md); }
+.band p { color: var(--color-muted); }
+.band p strong, .band p b { color: var(--color-ink); font-weight: 700; }
+
+/* ════════════ 4 · la ruta — Narrative Workflow ════════════ */
+
+.route { margin-top: var(--space-2xl); position: relative; }
+
+/* El riel se rellena con el scroll: es el progreso, no un adorno. */
+.rail {
+  position: absolute;
+  left: 7px;
+  top: 0;
+  bottom: 0;
+  width: var(--rule-thick);
+  background: var(--color-rule);
+}
+.rail-fill {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 0;
+  background: var(--color-accent);
+  transform-origin: top;
+}
+@media (min-width: 48rem) { .rail { left: 11px; } }
+
+.stage {
+  position: relative;
+  padding-left: var(--space-2xl);
+  padding-bottom: var(--space-3xl);
+}
+.stage:last-child { padding-bottom: 0; }
+
+/* El marcador codifica la consola: sube el brillo con la generación. */
+.dot {
+  position: absolute;
+  left: 0;
+  top: 6px;
+  width: 17px; height: 17px;
+  background: var(--era, var(--color-neutral));
+  border: var(--rule-thick) solid var(--color-paper);
+  outline: var(--rule-hair) solid var(--color-rule);
+}
+@media (min-width: 48rem) { .dot { width: 25px; height: 25px; } .stage { padding-left: var(--space-3xl); } }
+
+/* El número va ARRIBA del título, misma columna. Nunca a la izquierda en dos columnas. */
+.stage-n {
+  font-family: var(--font-display);
+  font-size: var(--text-pixel-sm);
+  color: var(--color-accent);
+  line-height: 1.8;
+}
+.stage.done .stage-n { color: var(--color-done); }
+
+.stage h3 {
+  font-size: var(--text-3xl);
+  margin-top: var(--space-2xs);
+  line-height: 1.6;
+}
+
+.stage-meta {
+  margin-top: var(--space-sm);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2xs) var(--space-md);
+  font-family: var(--font-display);
+  font-size: var(--text-pixel-xs);
+  line-height: 2.4;
+  color: var(--color-neutral);
+}
+.stage-meta b { color: var(--color-muted); font-weight: 400; }
+
+.stage-why { margin-top: var(--space-md); font-size: var(--text-md); color: var(--color-muted); }
+.stage-why b { color: var(--color-ink); font-weight: 700; }
+
+.aside {
+  margin-top: var(--space-md);
+  padding: var(--space-sm) var(--space-md);
+  border-left: var(--rule-thick) solid var(--color-rule);
+  background: var(--color-paper-2);
+  font-size: var(--text-sm);
+  color: var(--color-neutral);
+}
+.aside b { color: var(--color-muted); }
+
+/* --- el marcador de completado --- */
+.mark {
+  margin-top: var(--space-lg);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-family: var(--font-display);
+  font-size: var(--text-pixel-xs);
+  line-height: 1;
+  color: var(--color-neutral);
+  background: var(--color-paper);
+  border: var(--rule-thick) solid var(--color-rule);
+  padding: var(--space-sm) var(--space-md);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color var(--dur-micro) var(--ease-out),
+              border-color var(--dur-micro) var(--ease-out),
+              transform var(--dur-micro) var(--ease-out);
+}
+.mark:hover, .mark.is-hover { color: var(--color-accent); border-color: var(--color-accent); }
+.mark:active, .mark.is-active { transform: translateY(1px); }
+.mark .box {
+  width: 11px; height: 11px;
+  border: var(--rule-hair) solid currentColor;
+  flex: none;
+}
+.stage.done .mark { color: var(--color-done); border-color: var(--color-done); }
+.stage.done .mark .box { background: var(--color-done); }
+
+/* ════════════ 5 · tablas ════════════ */
+
+.tbl {
+  margin-top: var(--space-xl);
+  overflow-x: auto;
+  border: var(--rule-thick) solid var(--color-rule);
+}
+table { border-collapse: collapse; width: 100%; font-size: var(--text-sm); }
+th, td { text-align: left; padding: var(--space-sm) var(--space-md); border-bottom: var(--rule-hair) solid var(--color-rule); }
+th {
+  background: var(--color-paper-2);
+  font-family: var(--font-display);
+  font-size: var(--text-pixel-xs);
+  font-weight: 400;
+  line-height: 2.2;
+  color: var(--color-neutral);
+  white-space: nowrap;
+}
+td { color: var(--color-muted); vertical-align: top; }
+td b { color: var(--color-ink); }
+tr:last-child td { border-bottom: 0; }
+.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+/* ════════════ 6 · notas ════════════ */
+
+.note {
+  margin-top: var(--space-lg);
+  padding: var(--space-md) var(--space-lg);
+  background: var(--color-paper-2);
+  border-left: var(--rule-thick) solid var(--color-accent);
+  font-size: var(--text-sm);
+}
+.note.warn { border-left-color: var(--color-warn); background: var(--color-warn-bg); }
+.note.warn b { color: var(--color-warn); }
+
+.cmd {
+  display: block;
+  margin-top: var(--space-md);
+  padding: var(--space-md);
+  background: var(--color-paper-2);
+  border: var(--rule-hair) solid var(--color-rule);
+  font-family: var(--font-display);
+  font-size: var(--text-pixel-xs);
+  line-height: 2.2;
+  color: var(--color-ink);
+  overflow-x: auto;
+  white-space: pre;
+}
+
+/* ════════════ 7 · footer Ft5 — declaración ════════════ */
+
+footer {
+  border-top: var(--rule-thick) solid var(--color-rule);
+  padding-block: var(--space-3xl) var(--space-4xl);
+}
+.statement {
+  font-family: var(--font-display);
+  font-size: var(--text-3xl);
+  line-height: 1.7;
+  color: var(--color-ink);
+  max-width: 22ch;
+}
+.colophon {
+  margin-top: var(--space-xl);
+  font-size: var(--text-sm);
+  color: var(--color-neutral);
+  max-width: 58ch;
+}
+
+/* ════════════ 8 · movimiento — tres primitivas ════════════ */
+
+/* (a) boot: una sola secuencia orquestada al cargar, escalonada por índice */
+.boot {
+  opacity: 0;
+  transform: translateY(8px);
+  animation: boot var(--dur-long) var(--ease-out) forwards;
+  animation-delay: calc(var(--i, 0) * 70ms);
+}
+@keyframes boot { to { opacity: 1; transform: none; } }
+
+/* (b) press-start: parpadeo finito. Seis pulsos y descansa — no un bucle infinito. */
+.press { animation: press 1s steps(1, end) 6; }
+@keyframes press { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0.15; } }
+
+/* (c) rail-fill vive en JS: la altura del riel sigue al scroll (progreso real) */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 150ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 150ms !important;
+  }
+  .boot { animation: boot-reduced 150ms linear forwards; }
+  @keyframes boot-reduced { to { opacity: 1; transform: none; } }
+  .press { animation: none; opacity: 1; }
+}
+
+/* ════════════ 9 · responsive ════════════ */
+
+@media (max-width: 40rem) {
+  body { font-size: var(--text-sm); }
+  .hero { padding-block: var(--space-2xl) var(--space-xl); }
+  .band { padding-block: var(--space-2xl); }
+  .band-wide { padding-block: var(--space-3xl) var(--space-2xl); }
+  .pill { gap: var(--space-sm); padding-inline: var(--space-sm); }
+  .statement { max-width: none; }
+}
+
+/* ════════════ 10 · sprites ════════════
+   Cada parada muestra su mascota EN EL ESTILO GRÁFICO DE SU JUEGO: el arte
+   evoluciona de 1998 a 2025 a medida que bajás. Es contenido, no decoración. */
+
+.stage {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-md);
+}
+@media (min-width: 40rem) {
+  .stage { grid-template-columns: minmax(0, 1fr) auto; align-items: start; }
+}
+
+.stage-body { min-width: 0; }
+
+.sprite {
+  margin: 0;
+  justify-self: start;
+  display: grid;
+  place-items: center;
+  width: 7.5rem;
+  height: 7.5rem;
+  flex: none;
+  background: var(--color-paper-2);
+  border: var(--rule-hair) solid var(--color-rule);
+  /* Las mismas líneas de barrido de la pantalla del héroe, mucho más suaves. */
+  background-image: repeating-linear-gradient(
+    to bottom,
+    oklch(0% 0 0 / 0.05) 0 1px,
+    oklch(0% 0 0 / 0) 1px 3px
+  );
+}
+@media (min-width: 40rem) { .sprite { justify-self: end; } }
+
+.sprite img {
+  display: block;
+  width: 96px;
+  height: 96px;
+  object-fit: contain;
+  /* Sin esto el navegador interpola y el pixel-art se ve borroso. */
+  image-rendering: pixelated;
+  transition: transform var(--dur-short) var(--ease-out);
+}
+
+/* La mascota reacciona a la parada, no se mueve sola: nada de bucles ambientales. */
+.stage:hover .sprite img,
+.stage:focus-within .sprite img { transform: translateY(-3px); }
+
+.stage.done .sprite { border-color: var(--color-done); }
+
+/* Al marcar una parada la mascota da un salto. Una vez, no en bucle. */
+.stage.just-done .sprite img { animation: hop 420ms steps(3, end) 1; }
+@keyframes hop {
+  0%   { transform: translateY(0); }
+  40%  { transform: translateY(-10px); }
+  100% { transform: translateY(0); }
+}
+
+/* --- el sprite del héroe vive dentro de la pantalla --- */
+.screen { position: relative; }
+.screen-sprite {
+  position: absolute;
+  right: var(--space-md);
+  bottom: var(--space-md);
+  width: 60px;
+  height: 60px;
+  z-index: 2;
+  image-rendering: pixelated;
+  /* Lo llevo al verde oscuro de la DMG: la pantalla solo mostraba cuatro tonos. */
+  filter: grayscale(1) brightness(0.45) sepia(1) hue-rotate(48deg) saturate(2.2);
+}
+
+/* ════════════ 11 · encendido de la pantalla ════════════
+   Una DMG no aparece: se enciende. Un destello y después la imagen. */
+
+.screen { animation: screen-on 620ms var(--ease-out) 1 both; animation-delay: 180ms; }
+@keyframes screen-on {
+  0%   { filter: brightness(2.4) contrast(0.2); opacity: 0; }
+  35%  { filter: brightness(1.8) contrast(0.5); opacity: 1; }
+  100% { filter: none; opacity: 1; }
+}
+
+.screen > * { animation: screen-content 420ms var(--ease-out) 1 both; animation-delay: 520ms; }
+@keyframes screen-content { from { opacity: 0; } to { opacity: 1; } }
+
+/* ════════════ 12 · el punto se enciende al pasar ════════════
+   El riel traza la ruta y cada parada se ilumina cuando la alcanzás, como un
+   mapa de pueblo marcándose solo. NUNCA esconde contenido: el texto está ahí
+   desde el primer fotograma, encendido o no. */
+
+.dot {
+  transform: scale(0.82);
+  filter: saturate(0.45) brightness(0.78);
+  transition: transform var(--dur-short) var(--ease-out),
+              filter var(--dur-short) var(--ease-out);
+}
+.stage.reached .dot { transform: scale(1); filter: none; }
+.stage.done .dot { background: var(--color-done); }
+
+@media (prefers-reduced-motion: reduce) {
+  .screen, .screen > * { animation: none; filter: none; opacity: 1; }
+  .dot { transform: scale(1); filter: none; transition: none; }
+  .stage.just-done .sprite img { animation: none; }
+  .stage:hover .sprite img, .stage:focus-within .sprite img { transform: none; }
+}
+
+/* ════════════ 13 · el kicker del héroe ════════════ */
+
+.kicker {
+  margin-top: var(--space-md);
+  font-family: var(--font-display);
+  font-size: var(--text-pixel-xs);
+  line-height: 2.2;
+  color: var(--color-accent);
+}
+
+.byline { margin-top: var(--space-md); color: var(--color-muted); }
+.colophon + .colophon { margin-top: var(--space-sm); }
+
+/* ════════════ 14 · la nota de apertura ════════════ */
+
+.card-note {
+  max-width: 64ch;
+  padding: var(--space-lg) var(--space-xl);
+  background: var(--color-paper-2);
+  border-left: var(--rule-thick) solid var(--color-accent);
+  display: grid;
+  gap: var(--space-md);
+}
+.card-note-h {
+  font-family: var(--font-display);
+  font-size: var(--text-pixel-sm);
+  line-height: 1.9;
+  color: var(--color-accent);
+}
+.card-note p { color: var(--color-muted); }
+.card-note b { color: var(--color-ink); font-weight: 700; }
+
+.disclaimer {
+  padding-top: var(--space-md);
+  border-top: var(--rule-hair) solid var(--color-rule);
+  font-size: var(--text-sm);
+}
+.sig { font-size: var(--text-sm); }
+.sig a { color: var(--color-accent); }
+
+/* ════════════ 15 · lo que estrenó cada generación ════════════ */
+
+.stage-new {
+  margin-top: var(--space-md);
+  font-size: var(--text-sm);
+  color: var(--color-neutral);
+}
+.stage-new b { color: var(--color-accent); font-weight: 400; font-family: var(--font-display);
+  font-size: var(--text-pixel-xs); line-height: 2.4; }
+
+/* ════════════ 16 · la generación completa, plegada ════════════
+   El desplegable existe para que la ruta sea completa sin ser larga: los
+   descartes están ahí, a un clic, en vez de escondidos en otra sección. */
+
+details.gen {
+  margin-top: var(--space-lg);
+  border: var(--rule-hair) solid var(--color-rule);
+  background: var(--color-paper-2);
+}
+details.gen > summary {
+  cursor: pointer;
+  padding: var(--space-sm) var(--space-md);
+  font-family: var(--font-display);
+  font-size: var(--text-pixel-xs);
+  line-height: 2.2;
+  color: var(--color-neutral);
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+details.gen > summary::-webkit-details-marker { display: none; }
+details.gen > summary::before {
+  content: "+";
+  color: var(--color-accent);
+  flex: none;
+}
+details.gen[open] > summary::before { content: "-"; }
+details.gen > summary:hover { color: var(--color-accent); }
+details.gen > summary:focus-visible { outline: var(--rule-thick) solid var(--color-focus); outline-offset: -3px; }
+
+.gen-list {
+  margin: 0;
+  padding: 0 var(--space-md) var(--space-md);
+  list-style: none;
+  display: grid;
+  gap: var(--space-sm);
+  font-size: var(--text-sm);
+  color: var(--color-neutral);
+}
+.gen-list li { display: flex; gap: var(--space-sm); align-items: baseline; }
+.gen-list b { color: var(--color-muted); font-weight: 700; }
+.gen-list .tick {
+  width: 9px; height: 9px;
+  flex: none;
+  transform: translateY(-1px);
+  border: var(--rule-hair) solid var(--color-rule);
+}
+.gen-list .pick b { color: var(--color-ink); }
+.gen-list .pick .tick { background: var(--color-accent); border-color: var(--color-accent); }
