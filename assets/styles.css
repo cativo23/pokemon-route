@@ -510,17 +510,23 @@ footer {
 
 /* --- el sprite del héroe vive dentro de la pantalla --- */
 .screen { position: relative; }
+/* El sprite REAL de Pokémon Yellow, remapeado a los tres tonos oscuros de la DMG
+   (#0F380F, #306230, #8BAC0F) con ImageMagick. Sin filtros CSS: los colores están
+   horneados en el PNG, que es como se veía de verdad en la consola. El cuarto tono,
+   #9BBC0F, es el fondo de la pantalla, así que el sprite se recorta contra él. */
 .screen-sprite {
   position: absolute;
   right: var(--space-md);
-  bottom: var(--space-md);
-  width: 60px;
-  height: 60px;
+  bottom: var(--space-sm);
+  width: 80px;
+  height: 80px;
   z-index: 2;
   image-rendering: pixelated;
-  /* Lo llevo al verde oscuro de la DMG: la pantalla solo mostraba cuatro tonos. */
-  filter: grayscale(1) brightness(0.45) sepia(1) hue-rotate(48deg) saturate(2.2);
+  /* Cuatro saltos al encender y se queda quieto, igual que el > START. */
+  animation: idle 900ms steps(2, jump-none) 4;
+  animation-delay: 700ms;
 }
+@keyframes idle { from { transform: translateY(0); } to { transform: translateY(-4px); } }
 
 /* ════════════ 11 · encendido de la pantalla ════════════
    Una DMG no aparece: se enciende. Un destello y después la imagen. */
@@ -550,7 +556,7 @@ footer {
 .stage.done .dot { background: var(--color-done); }
 
 @media (prefers-reduced-motion: reduce) {
-  .screen, .screen > * { animation: none; filter: none; opacity: 1; }
+  .screen, .screen > *, .screen-sprite { animation: none; filter: none; opacity: 1; }
   .dot { transform: scale(1); filter: none; transition: none; }
   .stage.just-done .sprite img { animation: none; }
   .stage:hover .sprite img, .stage:focus-within .sprite img { transform: none; }
