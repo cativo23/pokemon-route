@@ -1,0 +1,20 @@
+name: Bug
+description: Something on the page is broken.
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happens
+    validations: { required: true }
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+    validations: { required: true }
+  - type: input
+    id: env
+    attributes:
+      label: Browser and screen width
+      placeholder: Firefox 141, 375px
+    validations: { required: true }

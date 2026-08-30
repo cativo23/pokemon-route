@@ -14,7 +14,8 @@ echo "==> destino      : $HOST:$REMOTE"
 ssh "$HOST" "mkdir -p '$REMOTE/html'"
 
 rsync -az --delete \
-  --exclude '.git' --exclude 'deploy' --exclude 'README.md' \
+  --exclude '.git' --exclude '.github' --exclude 'deploy' --exclude 'tools' \
+  --exclude 'docs' --exclude '*.md' --exclude 'LICENSE' --exclude '.editorconfig' \
   "$SRC/" "$HOST:$REMOTE/html/"
 
 scp -q "$SRC/deploy/compose.prod.yml" "$HOST:$REMOTE/compose.prod.yml"

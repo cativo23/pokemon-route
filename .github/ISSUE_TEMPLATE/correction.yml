@@ -1,0 +1,32 @@
+name: Factual correction
+description: Something on the page is stated as fact and is wrong.
+labels: [correction]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        These are the most valuable reports. Release years, mechanics, which
+        generation introduced what — if a stated fact is wrong, I want to fix it.
+  - type: input
+    id: where
+    attributes:
+      label: Where
+      description: Which stop or section?
+      placeholder: Stop 04 — Pokémon Platinum
+    validations: { required: true }
+  - type: textarea
+    id: claim
+    attributes:
+      label: What the page says
+    validations: { required: true }
+  - type: textarea
+    id: correct
+    attributes:
+      label: What is actually true
+    validations: { required: true }
+  - type: input
+    id: source
+    attributes:
+      label: Source
+      description: A link. Bulbapedia, Serebii, an official page.
+    validations: { required: true }

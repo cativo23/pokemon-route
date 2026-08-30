@@ -1,0 +1,26 @@
+name: Route argument
+description: You think a different version belongs on the route.
+labels: [route]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Version picks are opinions and I'll defend mine — but I'd rather hear
+        a good argument than be quietly wrong. Make the case.
+  - type: input
+    id: stop
+    attributes:
+      label: Which stop
+      placeholder: Stop 08 — Pokémon Sun
+    validations: { required: true }
+  - type: input
+    id: instead
+    attributes:
+      label: What you'd play instead
+    validations: { required: true }
+  - type: textarea
+    id: why
+    attributes:
+      label: Why
+      description: What does the swap gain, and what does it cost?
+    validations: { required: true }
