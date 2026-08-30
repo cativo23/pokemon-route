@@ -1,0 +1,12 @@
+# Anclar acciones a un SHA las vuelve seguras pero inmoviles. Dependabot es la
+# otra mitad del trato: abre un PR cuando sale una version nueva, con el SHA ya
+# resuelto y las notas del cambio.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    commit-message:
+      prefix: ci
+    labels: [ci]

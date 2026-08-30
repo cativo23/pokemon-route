@@ -14,9 +14,11 @@ jobs:
     name: validate
     runs-on: ubuntu-latest
     steps:
-      # v4 corre sobre Node 20, que GitHub ya marco como obsoleto. v7 usa node24.
-      # Etiqueta mayor a proposito: recibe parches sin tener que tocar esto.
-      - uses: actions/checkout@v7
+      # Anclado al SHA del commit, no a una etiqueta: una etiqueta es mutable y
+      # quien controle el repo de la accion puede reapuntarla a otro codigo.
+      # Dependabot lo mantiene al dia (.github/dependabot.yml), asi que anclar
+      # no significa quedarse viejo.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       # The site has no dependencies, so neither do its checks: the validator
       # is standard-library Python and the JS check is node's own parser.
