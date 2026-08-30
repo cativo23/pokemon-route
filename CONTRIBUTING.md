@@ -4,7 +4,7 @@ Thanks for looking. This is a small, opinionated project — here is what is use
 
 ## What I want most
 
-**Factual corrections.** Release years, mechanics, which generation introduced what, how a feature actually unlocks. I have already shipped two errors and had to fix them: I claimed Sword was the first mainline game on a home console (Let's Go beat it by a year), and I described Challenge Mode as a selectable option when it is exclusive to Black 2 and only unlocks after you beat the Champion.
+**Factual corrections.** Release years, mechanics, which generation introduced what, how a feature actually unlocks. I have already shipped several errors and had to fix them: I claimed Sword was the first mainline game on a home console (Let's Go beat it by a year); I described Challenge Mode as a selectable option when it is exclusive to Black 2 and only unlocks after you beat the Champion; and I wrote that Brilliant Diamond and Shining Pearl reintroduce every problem Platinum had solved, when the Grand Underground restores most of the Pokemon Platinum added.
 
 If a stated fact is wrong, open a [correction issue](../../issues/new?template=correction.yml) with a source. Bulbapedia and Serebii are ideal.
 
@@ -22,6 +22,7 @@ These are not negotiable, because they are the point of the project:
 - **Stay inside the weight budget.** ~172 KB today, 400 KB hard ceiling in CI.
 - **Accessibility is not optional.** Real alt text, visible focus, reduced motion honoured, keyboard operable.
 - **No invented data.** No made-up statistics, no fabricated difficulty scores, no filler numbers. Hour counts are estimates and are labelled as such.
+- **No plot spoilers.** The page is written for someone who has not played these games. Premise and structure are fair game — what a game is about, how it is shaped, what unlocks when. Plot beats, endings, twists and character fates are not. "This game's ending is its best moment" is fine; naming what happens in it is not. This rule has been broken once already: a factual correction about the Alola versions was written with the ending spelled out, and had to be rewritten.
 
 ## Before you open a PR
 
