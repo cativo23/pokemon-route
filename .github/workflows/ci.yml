@@ -14,7 +14,9 @@ jobs:
     name: validate
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      # v4 corre sobre Node 20, que GitHub ya marco como obsoleto. v7 usa node24.
+      # Etiqueta mayor a proposito: recibe parches sin tener que tocar esto.
+      - uses: actions/checkout@v7
 
       # The site has no dependencies, so neither do its checks: the validator
       # is standard-library Python and the JS check is node's own parser.
