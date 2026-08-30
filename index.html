@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Ruta para jugar la saga Pokémon de la generación 1 a la 9: doce juegos, una historia por región, sin versiones repetidas ni remakes redundantes.">
+<meta name="color-scheme" content="light dark">
+<title>De Kanto a Paldea</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&family=DM+Mono:wght@400;500&display=swap">
+<style>
+/* ---------- tokens: claro por defecto ---------- */
+:root {
+  --ground:      #EBEDE4;
+  --surface:     #F6F7F1;
+  --surface-2:   #E1E4D6;
+  --line:        #CBD0BC;
+  --line-soft:   #DDE1D2;
+  --text:        #1A1F14;
+  --text-soft:   #4C543F;
+  --text-mute:   #757C66;
+  --accent:      #4A6318;
+  --accent-soft: #6F8C33;
+  --accent-wash: #DCE4C6;
+  --done:        #2F6B4F;
+  --done-wash:   #D3E6DC;
+  --warn:        #8A5A16;
+  --warn-wash:   #EFE0C6;
+  --shadow:      0 1px 2px rgba(26,31,20,.06), 0 8px 24px -12px rgba(26,31,20,.18);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground:      #0E1309;
+    --surface:     #161C10;
+    --surface-2:   #1E2617;
+    --line:        #333D26;
+    --line-soft:   #26301B;
+    --text:        #DFE7CF;
+    --text-soft:   #AFBA9B;
+    --text-mute:   #808B6C;
+    --accent:      #9BBC0F;
+    --accent-soft: #7E9A17;
+    --accent-wash: #232D12;
+    --done:        #63C79A;
+    --done-wash:   #16281F;
+    --warn:        #D9A455;
+    --warn-wash:   #2B2113;
+    --shadow:      0 1px 2px rgba(0,0,0,.4), 0 10px 28px -14px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"] {
+  --ground:      #0E1309;
+  --surface:     #161C10;
+  --surface-2:   #1E2617;
+  --line:        #333D26;
+  --line-soft:   #26301B;
+  --text:        #DFE7CF;
+  --text-soft:   #AFBA9B;
+  --text-mute:   #808B6C;
+  --accent:      #9BBC0F;
+  --accent-soft: #7E9A17;
+  --accent-wash: #232D12;
+  --done:        #63C79A;
+  --done-wash:   #16281F;
+  --warn:        #D9A455;
+  --warn-wash:   #2B2113;
+  --shadow:      0 1px 2px rgba(0,0,0,.4), 0 10px 28px -14px rgba(0,0,0,.7);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--text);
+  font-family: "Source Sans 3", ui-sans-serif, system-ui, sans-serif;
+  font-size: 17px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap { max-width: 940px; margin: 0 auto; padding: 0 24px; }
+
+h1, h2, h3 {
+  font-family: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  text-wrap: balance;
+  margin: 0;
+  line-height: 1.1;
+}
+
+.mono {
+  font-family: "DM Mono", ui-monospace, SFMono-Regular, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- cabecera ---------- */
+.hero {
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
+  padding: 56px 0 40px;
+}
+.eyebrow {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 18px;
+}
+.hero h1 {
+  font-size: clamp(40px, 8vw, 74px);
+  font-weight: 800;
+  letter-spacing: -.025em;
+}
+.hero .sub {
+  margin: 20px 0 0;
+  max-width: 60ch;
+  font-size: 19px;
+  color: var(--text-soft);
+}
+
+.figs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1px;
+  margin-top: 36px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.fig { background: var(--surface); padding: 16px 18px; }
+.fig b {
+  display: block;
+  font-family: "Bricolage Grotesque", sans-serif;
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: -.02em;
+  font-variant-numeric: tabular-nums;
+}
+.fig span {
+  font-size: 12.5px;
+  color: var(--text-mute);
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  font-family: "DM Mono", monospace;
+}
+
+/* ---------- progreso ---------- */
+.prog-bar {
+  height: 6px;
+  border-radius: 99px;
+  background: var(--surface-2);
+  overflow: hidden;
+  margin-top: 28px;
+  border: 1px solid var(--line-soft);
+}
+.prog-fill {
+  height: 100%;
+  width: 0;
+  background: var(--accent);
+  transition: width .35s ease;
+}
+.prog-lbl {
+  margin-top: 10px;
+  font-size: 13.5px;
+  color: var(--text-mute);
+  font-family: "DM Mono", monospace;
+}
+
+/* ---------- secciones ---------- */
+/* OJO: estas secciones tambien llevan .wrap, y una clase le gana en especificidad a un
+   selector de elemento. Con `section { padding }` a secas, el `padding: 0 24px` de .wrap
+   lo pisaba y las secciones quedaban sin aire vertical. */
+main > section.wrap { padding-block: 52px; }
+main > section.wrap + section.wrap { border-top: 1px solid var(--line-soft); }
+h2 {
+  font-size: clamp(26px, 4vw, 34px);
+  font-weight: 700;
+  letter-spacing: -.02em;
+}
+.lede {
+  margin: 14px 0 0;
+  max-width: 66ch;
+  color: var(--text-soft);
+}
+
+/* ---------- ruta ---------- */
+.route { margin-top: 34px; display: flex; flex-direction: column; gap: 14px; }
+
+.stop {
+  position: relative;
+  display: grid;
+  grid-template-columns: 58px 1fr;
+  gap: 20px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 20px 22px;
+  box-shadow: var(--shadow);
+}
+.stop.is-done { border-color: var(--done); background: var(--done-wash); }
+
+.num {
+  font-family: "Bricolage Grotesque", sans-serif;
+  font-size: 30px;
+  font-weight: 800;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  padding-top: 2px;
+}
+.stop.is-done .num { color: var(--done); }
+
+.stop-hd {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 12px;
+}
+.stop h3 { font-size: 21px; font-weight: 700; letter-spacing: -.01em; }
+.region {
+  font-family: "DM Mono", monospace;
+  font-size: 11.5px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: var(--accent-wash);
+  padding: 3px 8px;
+  border-radius: 5px;
+}
+.stop.is-done .region { color: var(--done); background: transparent; border: 1px solid var(--done); }
+
+.meta {
+  margin-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 20px;
+  font-family: "DM Mono", monospace;
+  font-size: 13px;
+  color: var(--text-mute);
+}
+.meta i { font-style: normal; color: var(--text-soft); }
+
+.why { margin: 13px 0 0; font-size: 16px; color: var(--text-soft); }
+.why b { color: var(--text); font-weight: 600; }
+
+.alt {
+  margin-top: 12px;
+  padding: 10px 13px;
+  border-left: 2px solid var(--line);
+  background: var(--surface-2);
+  border-radius: 0 7px 7px 0;
+  font-size: 14.5px;
+  color: var(--text-mute);
+}
+.alt b { color: var(--text-soft); }
+
+.chk {
+  margin-top: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  cursor: pointer;
+  font-size: 14px;
+  font-family: "DM Mono", monospace;
+  color: var(--text-mute);
+  background: none;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  padding: 6px 12px;
+  font-weight: 500;
+}
+.chk:hover { border-color: var(--accent); color: var(--accent); }
+.chk:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.chk .box {
+  width: 15px; height: 15px;
+  border: 1.5px solid currentColor;
+  border-radius: 4px;
+  display: grid; place-items: center;
+  font-size: 11px; line-height: 1;
+}
+.stop.is-done .chk { color: var(--done); border-color: var(--done); }
+.stop.is-done .chk .box::after { content: "✓"; }
+
+/* ---------- tablas ---------- */
+.tbl { margin-top: 26px; overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; }
+table { border-collapse: collapse; width: 100%; font-size: 15px; }
+th, td { text-align: left; padding: 11px 15px; border-bottom: 1px solid var(--line-soft); }
+th {
+  background: var(--surface-2);
+  font-family: "DM Mono", monospace;
+  font-size: 11.5px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--text-mute);
+  font-weight: 500;
+  white-space: nowrap;
+}
+td { background: var(--surface); vertical-align: top; }
+tr:last-child td { border-bottom: 0; }
+td.n { font-family: "DM Mono", monospace; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+/* ---------- notas ---------- */
+.note {
+  margin-top: 22px;
+  padding: 16px 19px;
+  border-radius: 10px;
+  background: var(--accent-wash);
+  border: 1px solid var(--line);
+  font-size: 15.5px;
+  color: var(--text-soft);
+}
+.note b { color: var(--text); }
+.note.warn { background: var(--warn-wash); }
+.note.warn b { color: var(--warn); }
+
+.cmd {
+  display: block;
+  margin-top: 12px;
+  padding: 12px 15px;
+  background: var(--ground);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font-family: "DM Mono", monospace;
+  font-size: 13.5px;
+  color: var(--text);
+  overflow-x: auto;
+  white-space: pre;
+}
+
+footer {
+  border-top: 1px solid var(--line);
+  background: var(--surface);
+  padding: 30px 0 46px;
+  font-size: 14px;
+  color: var(--text-mute);
+}
+footer a { color: var(--accent); }
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
+@media (max-width: 560px) {
+  .stop { grid-template-columns: 1fr; gap: 6px; }
+  .num { font-size: 22px; }
+}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Ruta de juego · gen 1 → gen 9</div>
+    <h1>De Kanto a Paldea</h1>
+    <p class="sub">Doce juegos, una historia por región. Sin repetir versiones pareadas y sin
+      remakes de historias que ya jugaste — solo la versión que vale la pena de cada tanda.</p>
+
+    <div class="figs">
+      <div class="fig"><b>12</b><span>paradas</span></div>
+      <div class="fig"><b>9</b><span>regiones</span></div>
+      <div class="fig"><b id="f-hrs">~365 h</b><span>estimadas</span></div>
+      <div class="fig"><b>3</b><span>emuladores</span></div>
+    </div>
+
+    <div class="prog-bar"><div class="prog-fill" id="prog"></div></div>
+    <div class="prog-lbl" id="prog-lbl">1 de 12 · Scarlet listo</div>
+  </div>
+</header>
+
+<main>
+
+<section class="wrap">
+  <h2>Por qué doce y no veintidós</h2>
+  <p class="lede">Salieron 22 títulos principales, pero muchos cuentan <b>la misma historia dos
+    veces</b>. Las versiones pareadas (Red y Blue, Scarlet y Violet) son idénticas salvo unos pocos
+    Pokémon exclusivos. Y los remakes recorren una región que ya está en la ruta: FireRed es Kanto
+    otra vez, HeartGold es Johto otra vez.</p>
+  <p class="lede">Descontando eso quedan <b>doce historias distintas</b>. Ese es el recorrido de
+    abajo, en orden de salida.</p>
+</section>
+
+<section class="wrap">
+  <h2>La ruta</h2>
+  <p class="lede">Marcá cada juego al terminarlo — se guarda en este navegador.</p>
+
+  <div class="route" id="route">
+
+    <article class="stop" data-id="g1">
+      <div class="num">01</div>
+      <div>
+        <div class="stop-hd"><h3>Pokémon Yellow</h3><span class="region">Kanto</span></div>
+        <div class="meta"><span>1998</span><span><i>Game Boy</i></span><span><i>mGBA</i></span><span>~25 h</span></div>
+        <p class="why">La mejor de las tres originales: reequilibra el juego, tiene los mejores
+          sprites de la generación, Pikachu te sigue fuera de la Poké Ball y aparece el trío del
+          Team Rocket del anime. <b>Es la única parada en Game Boy monocromo</b> y por eso vale
+          jugarla: es el punto de partida real de todo lo demás.</p>
+        <div class="alt"><b>Si se te hace muy áspera:</b> FireRed (GBA, 2004) cuenta la misma
+          historia con mecánicas modernas — habilidades, naturalezas, el reparto físico/especial.
+          Es objetivamente mejor juego, pero te saltea la era Game Boy entera.</div>
+        <button class="chk"><span class="box"></span>Terminado</button>
+      </div>
+    </article>
+
+    <article class="stop" data-id="g2">
+      <div class="num">02</div>
+      <div>
+        <div class="stop-hd"><h3>Pokémon Crystal</h3><span class="region">Johto</span></div>
+        <div class="meta"><span>2000</span><span><i>Game Boy Color</i></span><span><i>mGBA</i></span><span>~30 h</span></div>
+        <p class="why">La definitiva de Gold y Silver: agrega el arco de Suicune, sprites animados
+          y la primera protagonista mujer de la serie. Al terminar Johto <b>se abre Kanto entero</b>
+          como post-game, así que es el juego más largo de su época.</p>
+        <div class="alt"><b>Alternativa fuerte:</b> HeartGold (DS, 2009) está considerado uno de los
+          mejores juegos de toda la saga. Si vas a hacer una sola excepción con los remakes, hacela acá.</div>
+        <button class="chk"><span class="box"></span>Terminado</button>
+      </div>
+    </article>
+
+    <article class="stop" data-id="g3">
+      <div class="num">03</div>
+      <div>
+        <div class="stop-hd"><h3>Pokémon Emerald</h3><span class="region">Hoenn</span></div>
+        <div class="meta"><span>2004</span><span><i>Game Boy Advance</i></span><span><i>mGBA</i></span><span>~35 h</span></div>
+        <p class="why">La definitiva de la generación 3, y de las mejores de la saga. A diferencia
+          de Ruby y Sapphire, acá aparecen <b>los dos equipos villanos</b> en vez de uno solo, y el
+          post-game trae el <b>Battle Frontier</b>, el mejor contenido de combate que hizo la serie.</p>
+        <button class="chk"><span class="box"></span>Terminado</button>
+      </div>
+    </article>
+
+    <article class="stop" data-id="g4">
+      <div class="num">04</div>
+      <div>
+        <div class="stop-hd"><h3>Pokémon Platinum</h3><span class="region">Sinnoh</span></div>
+        <div class="meta"><span>2008</span><span><i>Nintendo DS</i></span><span><i>melonDS</i></span><span>~40 h</span></div>
+        <p class="why">Consenso claro: arregla casi todo lo que estaba flojo en Diamond y Pearl —
+          el ritmo, la variedad de Pokémon disponibles antes de la Liga, y la velocidad de combate,
+          que en los originales era notoriamente lenta.</p>
+        <div class="alt"><b>Evitá el remake.</b> Brilliant Diamond y Shining Pearl (2021) son
+          recreaciones muy literales de Diamond y Pearl, así que reintroducen justo los problemas
+          que Platinum había resuelto.</div>
+        <button class="chk"><span class="box"></span>Terminado</button>
+      </div>
+    </article>
+
+    <article class="stop" data-id="g5">
+      <div class="num">05</div>
+      <div>
+        <div class="stop-hd"><h3>Pokémon Black</h3><span class="region">Teselia</span></div>
+        <div class="meta"><span>2010</span><span><i>Nintendo DS</i></span><span><i>melonDS</i></span><span>~35 h</span></div>
+        <p class="why">La historia mejor escrita de la saga, y no está cerca. El villano tiene un
+          argumento real —si liberar a los Pokémon sería lo correcto— y el juego se lo toma en
+          serio. Además, hasta los créditos <b>solo aparecen Pokémon nuevos</b>: 156 especies que
+          nadie había visto, así que se juega como si fuera el primero otra vez.</p>
+        <button class="chk"><span class="box"></span>Terminado</button>
+      </div>
+    </article>
+
+    <article class="stop" data-id="g5b">
+      <div class="num">06</div>
+      <div>
+        <div class="stop-hd"><h3>Pokémon Black 2</h3><span class="region">Teselia · 2 años después</span></div>
+        <div class="meta"><span>2012</span><span><i>Nintendo DS</i></span><span><i>melonDS</i></span><span>~40 h</span></div>
+        <p class="why">La única <b>secuela directa</b> de la serie: misma región dos años más tarde,
+          con el mapa cambiado, protagonista nuevo y una historia que continúa la anterior en vez de
+          repetirla. Por eso está en la ruta aunque comparta generación con la parada 05 — no es
+          otra versión, es lo que pasó después.</p>
+        <button class="chk"><span class="box"></span>Terminado</button>
+      </div>
+    </article>
+
+    <article class="stop" data-id="g6">
+      <div class="num">07</div>
+      <div>
+        <div class="stop-hd"><h3>Pokémon X</h3><span class="region">Kalos</span></div>
+        <div class="meta"><span>2013</span><span><i>Nintendo 3DS</i></span><span><i>Azahar</i></span><span>~30 h</span></div>
+        <p class="why">El salto a 3D y la llegada de las <b>Mega Evoluciones</b>. X e Y son casi
+          idénticos —cambian unas Megas exclusivas y poco más— así que da igual cuál agarres.
+          Es de los más fáciles de la saga, lo cual después de Black 2 se agradece.</p>
+        <button class="chk"><span class="box"></span>Terminado</button>
+      </div>
+    </article>
+
+    <article class="stop" data-id="g7">
+      <div class="num">08</div>
+      <div>
+        <div class="stop-hd"><h3>Pokémon Sun</h3><span class="region">Alola</span></div>
+        <div class="meta"><span>2016</span><span><i>Nintendo 3DS</i></span><span><i>Azahar</i></span><span>~35 h</span></div>
+        <p class="why">Rompe la estructura de ocho gimnasios y la reemplaza por las pruebas
+          insulares. Elegí <b>el original y no Ultra Sun</b>: la versión Ultra agrega contenido pero
+          reescribe la historia y pierde el arco de Lillie, que es lo mejor que tiene el juego.</p>
+        <div class="alt"><b>Si venís por contenido y no por historia:</b> Ultra Sun trae una
+          Pokédex más grande, una octava prueba real y el Episodio RR de post-game.</div>
+        <button class="chk"><span class="box"></span>Terminado</button>
+      </div>
+    </article>
+
+    <article class="stop" data-id="g8">
+      <div class="num">09</div>
+      <div>
+        <div class="stop-hd"><h3>Pokémon Sword</h3><span class="region">Galar</span></div>
+        <div class="meta"><span>2019</span><span><i>Nintendo Switch</i></span><span><i>Eden</i></span><span>~30 h</span></div>
+        <p class="why">El primero en consola de sobremesa. Trae el Área Silvestre, que es el primer
+          intento de mundo abierto de la serie y el antecedente directo de lo que ya jugaste en
+          Scarlet.</p>
+        <button class="chk"><span class="box"></span>Terminado</button>
+      </div>
+    </article>
+
+    <article class="stop" data-id="pla">
+      <div class="num">10</div>
+      <div>
+        <div class="stop-hd"><h3>Pokémon Legends: Arceus</h3><span class="region">Hisui · Sinnoh antiguo</span></div>
+        <div class="meta"><span>2022</span><span><i>Nintendo Switch</i></span><span><i>Eden</i></span><span>~35 h</span></div>
+        <p class="why">No es un juego principal más: cambia la fórmula entera. Los Pokémon se
+          capturan en tiempo real sin entrar a combate, el foco está en completar la Pokédex y la
+          historia transcurre en <b>Sinnoh siglos antes</b> de la parada 04. Es lo más distinto que
+          hizo la serie.</p>
+        <button class="chk"><span class="box"></span>Terminado</button>
+      </div>
+    </article>
+
+    <article class="stop is-done" data-id="g9">
+      <div class="num">11</div>
+      <div>
+        <div class="stop-hd"><h3>Pokémon Scarlet</h3><span class="region">Paldea</span></div>
+        <div class="meta"><span>2022</span><span><i>Nintendo Switch</i></span><span><i>Eden</i></span><span>39 h</span></div>
+        <p class="why">Mundo abierto de verdad, con las tres rutas simultáneas. <b>Ya está: historia
+          terminada en 39 horas.</b> Te quedan las revanchas, el Torneo Ace y el DLC.</p>
+        <button class="chk"><span class="box"></span>Terminado</button>
+      </div>
+    </article>
+
+    <article class="stop" data-id="za">
+      <div class="num">12</div>
+      <div>
+        <div class="stop-hd"><h3>Pokémon Legends: Z-A</h3><span class="region">Kalos · Ciudad Luminalia</span></div>
+        <div class="meta"><span>2025</span><span><i>Nintendo Switch</i></span><span><i>Eden</i></span><span>~30 h</span></div>
+        <p class="why">Lo último que salió. Transcurre entero dentro de Luminalia, cinco años
+          después de la parada 07, con combate en tiempo real y Megas nuevas. Salió para Switch 2
+          <b>y también para Switch 1</b>, y es esa versión la que corre en Eden.</p>
+        <button class="chk"><span class="box"></span>Terminado</button>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<section class="wrap">
+  <h2>Qué instalar</h2>
+  <p class="lede">Tres emuladores cubren las doce paradas, y uno ya lo tenés andando.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th>Emulador</th><th>Cubre</th><th>Paradas</th><th>Estado</th></tr></thead>
+      <tbody>
+        <tr><td><b>RetroArch</b><br><span style="color:var(--text-mute);font-size:14px">núcleos mGBA + melonDS</span></td>
+            <td>Game Boy, GBC, GBA y Nintendo DS</td><td class="n">01 – 06</td><td>en el repo <span class="mono">extra</span></td></tr>
+        <tr><td><b>Azahar</b></td><td>Nintendo 3DS</td><td class="n">07 – 08</td><td>AUR</td></tr>
+        <tr><td><b>Eden</b></td><td>Nintendo Switch</td><td class="n">09 – 12</td><td>ya instalado</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="lede" style="margin-top:24px">RetroArch te deja las seis primeras paradas en una sola
+    aplicación con una sola biblioteca, en vez de andar saltando entre emuladores sueltos:</p>
+  <code class="cmd">sudo pacman -S retroarch libretro-mgba libretro-melonds</code>
+
+  <div class="note"><b>Azahar es el sucesor de Citra</b>, que cerró en 2024 después de la demanda
+    contra Yuzu. Nació de fusionar dos forks —Lime3DS y el de PabloMK7— en un solo proyecto, tiene
+    versión de Linux y de Android, y sigue con desarrollo activo.</div>
+
+  <div class="note"><b>Usá el avance rápido.</b> Los juegos hasta la parada 06 tienen mucho relleno:
+    animaciones de ataque lentas, texto lento, caminar de una punta a la otra. Los tres emuladores
+    lo traen, y corta las estimaciones de horas prácticamente a la mitad sin que te pierdas nada.</div>
+</section>
+
+<section class="wrap">
+  <h2>Lo que queda afuera, y por qué</h2>
+  <p class="lede">Diez títulos no están en la ruta. Ninguno se cae por ser malo — se caen porque
+    contarían algo que ya jugaste.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th>Título</th><th>Motivo</th></tr></thead>
+      <tbody>
+        <tr><td>Red · Blue</td><td>Yellow es la versión mejorada de esa misma historia</td></tr>
+        <tr><td>Gold · Silver</td><td>Crystal es la versión mejorada de esa misma historia</td></tr>
+        <tr><td>Ruby · Sapphire</td><td>Emerald los reemplaza con los dos equipos villanos</td></tr>
+        <tr><td>Diamond · Pearl</td><td>Platinum los reemplaza y arregla el ritmo</td></tr>
+        <tr><td>FireRed · LeafGreen</td><td>remake de Kanto — es la parada 01 otra vez</td></tr>
+        <tr><td>HeartGold · SoulSilver</td><td>remake de Johto — es la parada 02 otra vez</td></tr>
+        <tr><td>Omega Ruby · Alpha Sapphire</td><td>remake de Hoenn — es la parada 03 otra vez</td></tr>
+        <tr><td>Let's Go Pikachu · Eevee</td><td>remake de Kanto — es la parada 01 por tercera vez</td></tr>
+        <tr><td>Brilliant Diamond · Shining Pearl</td><td>remake de Sinnoh — es la parada 04 otra vez</td></tr>
+        <tr><td>Ultra Sun · Ultra Moon</td><td>reescritura de Alola con peor historia que la parada 08</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="lede" style="margin-top:22px">Las versiones pareadas de cada juego que <em>sí</em> está
+    en la ruta —Violet, Shield, Y, Moon, White, White 2— también quedan fuera por lo mismo: cambian
+    unos pocos Pokémon exclusivos y nada más.</p>
+</section>
+
+<section class="wrap">
+  <h2>El final de la ruta</h2>
+  <p class="lede">La parada 12 es el techo real, y no por falta de juegos.</p>
+
+  <div class="note warn"><b>La generación 10 sale en 2027 y no se va a poder emular.</b>
+    Pokémon Winds y Waves se anunciaron el 27 de febrero de 2026 y son <b>exclusivos de Switch 2</b>.
+    A mediados de 2026 ningún emulador corre juegos comerciales de esa consola: la Switch 2 no tiene
+    el agujero de hardware que tenía la Tegra X1 de la primera, y las estimaciones más optimistas
+    hablan de 2027 o 2028 para los primeros arranques. Hay quien calcula una década.</div>
+
+  <p class="lede" style="margin-top:22px">Dicho eso: son once juegos por delante, más de trescientas
+    horas. Ese muro te queda muy, muy lejos.</p>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    Las horas son estimaciones de historia principal, sin completar la Pokédex. Las elecciones de
+    versión siguen el consenso de la comunidad, verificado por búsqueda, no de memoria.
+    Los emuladores son legales; los juegos salen de volcar los cartuchos y consolas que tengas.
+  </div>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+  var KEY = "ruta-pokemon:v1";
+  var stops = Array.prototype.slice.call(document.querySelectorAll(".stop"));
+
+  function read() {
+    try {
+      var raw = localStorage.getItem(KEY);
+      if (raw) return JSON.parse(raw);
+    } catch (e) { /* modo privado o datos corruptos: arrancamos limpio */ }
+    return null;
+  }
+
+  var done = {};
+  var saved = read();
+  if (saved && typeof saved === "object") {
+    done = saved;
+  } else {
+    stops.forEach(function (s) {
+      if (s.classList.contains("is-done")) done[s.dataset.id] = true;
+    });
+  }
+
+  function write() {
+    try { localStorage.setItem(KEY, JSON.stringify(done)); } catch (e) { /* sin persistencia */ }
+  }
+
+  function paint() {
+    var n = 0;
+    stops.forEach(function (s) {
+      var on = !!done[s.dataset.id];
+      s.classList.toggle("is-done", on);
+      var btn = s.querySelector(".chk");
+      btn.setAttribute("aria-pressed", on ? "true" : "false");
+      btn.lastChild.nodeValue = on ? "Terminado" : "Marcar terminado";
+      if (on) n++;
+    });
+    var pct = Math.round((n / stops.length) * 100);
+    document.getElementById("prog").style.width = pct + "%";
+    document.getElementById("prog-lbl").textContent =
+      n + " de " + stops.length + " · " + pct + "% de la ruta";
+  }
+
+  stops.forEach(function (s) {
+    s.querySelector(".chk").addEventListener("click", function () {
+      done[s.dataset.id] = !done[s.dataset.id];
+      write();
+      paint();
+    });
+  });
+
+  paint();
+})();
+</script>
+</body>
+</html>
